@@ -188,8 +188,6 @@ void Map::buildCoarseGrid(){
 }
 
 void Map::addPathToFile(char* filePath , vector<vector<Node *> > graph,int Width,int Hight) {
-	cout<<"*********************************************"<<endl;
-
 		for(int z = 0;z<Hight;z++){
 			for(int l= 0;l<Width;l++){
 				if (graph[z][l] != NULL) {
@@ -198,16 +196,16 @@ void Map::addPathToFile(char* filePath , vector<vector<Node *> > graph,int Width
 						   	int i = graph[z][l]->getPosition().first;
 							int j = graph[z][l]->getPosition().second;
 							//convert the row to the original map row that was read from the image
-							i  = i* robotSizeInCells * 2;
+							i  = ((i+0.5) * robotSizeInCells * 2);
 							//convert the row to the original map column that was read from the image
-							j = j * robotSizeInCells * 2;
+							j = ((j+0.5) * robotSizeInCells * 2);
 
 							int i1 = graph[z][l]->neighborsInSpanningTree[k]->getPosition().first ;
 							int j1 = graph[z][l]->neighborsInSpanningTree[k]->getPosition().second;
 							////convert the row to the original map row that was read from the image
-							i1 = i1 * robotSizeInCells * 2;
+							i1 = ((i1+0.5) * robotSizeInCells * 2);
 							////convert the row to the original map column that was read from the image
-							j1 = j1 * robotSizeInCells * 2;
+							j1 = ((j1+0.5) * robotSizeInCells * 2);
 							//check how we need to move on row or column
 							if(j<j1 && i == i1){
 								for (int m = j; m < j1; m++) {
