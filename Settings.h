@@ -76,8 +76,8 @@ public:
 			  return  (int)(yRob / MAP_RESOLUTION + MAP_ROWS() / 2);
 	}
 
-	//Settings();
-	//virtual ~Settings();
+	Settings();
+	virtual ~Settings();
 };
 
 #endif /* SETTINGS_H_ */
