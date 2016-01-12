@@ -10,6 +10,7 @@ RM := rm -rf
 -include sources.mk
 -include STC/subdir.mk
 -include Map/subdir.mk
+-include Behavior/subdir.mk
 -include subdir.mk
 -include objects.mk
 

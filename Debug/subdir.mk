@@ -6,18 +6,21 @@
 CPP_SRCS += \
 ../Driver.cpp \
 ../Main.cpp \
+../Manager.cpp \
 ../Robot.cpp \
 ../Settings.cpp 
 
 OBJS += \
 ./Driver.o \
 ./Main.o \
+./Manager.o \
 ./Robot.o \
 ./Settings.o 
 
 CPP_DEPS += \
 ./Driver.d \
 ./Main.d \
+./Manager.d \
 ./Robot.d \
 ./Settings.d 
 

@@ -26,4 +26,5 @@ SUBDIRS := \
 . \
 STC \
 Map \
+Behavior \
 

@@ -14,8 +14,6 @@
 using namespace std;
 using namespace PlayerCc;
 
-namespace lodepng {
-
 class Robot {
 private:
 	PlayerClient *pc;
@@ -31,7 +29,5 @@ public:
 	void read();
 	virtual ~Robot();
 };
-
-} /* namespace lodepng */
 
 #endif /* ROBOT_H_ */

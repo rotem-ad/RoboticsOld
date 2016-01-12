@@ -7,8 +7,6 @@
 
 #include "Robot.h"
 
-namespace lodepng {
-
 Robot::Robot(string ip , int port) {
 	// TODO Auto-generated constructor stub
 	pc = new PlayerClient(ip,port);
@@ -41,6 +39,3 @@ void Robot::read(){
 Robot::~Robot() {
 	// TODO Auto-generated destructor stub
 }
-
-
-} /* namespace lodepng */
