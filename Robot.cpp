@@ -8,14 +8,13 @@
 #include "Robot.h"
 
 Robot::Robot(string ip , int port) {
-	// TODO Auto-generated constructor stub
 	pc = new PlayerClient(ip,port);
 	pp = new Position2dProxy(pc);
 	lp = new LaserProxy(pc);
 
+	// Set robot's odometry
+	//pp->SetOdometry(2.175, -2.875, M_PI / 4);
 }
-
-
 
 void Robot:: setSpeed(double linearSpeed , double angularSpeed){
 	pp->SetSpeed(linearSpeed,angularSpeed);
@@ -34,8 +33,9 @@ void Robot::read(){
 	pc->Read();
 }
 
-
-
+// Robot's destructor
 Robot::~Robot() {
-	// TODO Auto-generated destructor stub
+	delete pp;
+	delete lp;
+	delete pc;
 }
