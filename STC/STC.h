@@ -14,6 +14,7 @@ private:
 	void buildGraph();
 	void DFS(Node* n);
 	void printGraph();
+	//print
 	void printDFS();
 public:
 	STC(Map &map, Position startPos);
