@@ -31,6 +31,7 @@ int main() {
 	startPos.second = 17;
 	STC stc(map, startPos);
 	map.addPathToFile("roboticLabMapnew.png",stc.getGraph(),stc.getGraphWidth(),stc.getGraphHeight());
+	map.addPathToFile1("roboticLabMapnew1.png",map.getGridGraph(),stc.getGraphWidth(),stc.getGraphHeight());
 	return 0;
 }
 

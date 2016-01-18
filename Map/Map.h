@@ -16,12 +16,21 @@ class Map {
 private:
 	vector<unsigned char> image;
 	vector<unsigned char> Gridimage;
+	vector<vector<Node *> > gridGraph;
+	vector<vector<Node *> > originalGraph;
 	Grid map;
 	Grid inflateMap;
+	//original Map size
 	unsigned int mapWidth;
 	unsigned int mapHeight;
+	//grid Map size
+	unsigned int fineMapWidth;
+	unsigned int fineMapHeight;
+	//coarse Map size
 	unsigned int coarseMapWidth;
 	unsigned int coarseMapHeight;
+	//Converter from coarse to grid
+	int a,b;
 	float mapResolution;
 	float robotSize;
 	//size of the robot in pixels
@@ -35,9 +44,19 @@ private:
 	void inflate(int i , int j);
 
 public:
+	/**
+	 * constructor
+	 */
 	Map(float mapResolution, float robotSize);
+	/**
+	 * load map from file
+	 */
 	void loadMapFromFile(const char* filePath);
+	/**
+	 * save map to image file
+	 */
 	void addPathToFile(char* filePath , vector<vector<Node *> > graph,int Width,int Hight);
+	void addPathToFile1(char* filePath , vector<vector<Node *> > graph,int Width,int Hight);
 	void inflateObstacles();
 	void printMap() const;
 	void printGrid(const Grid &grid) const;
@@ -45,11 +64,19 @@ public:
 	void writeinflateObstacles(vector<vector<bool> > map);
 	void buildFineGrid();
 	void buildCoarseGrid();
+	void calcGridGraphindex(int i,int j);
 	virtual ~Map();
 
 	const Grid& getFineGrid() const;
 	const Grid& getCoarseGrid()const;
 
+	const vector<vector<Node*> >& getGridGraph() const {
+		return gridGraph;
+	}
+
+	void setGridGraph(const vector<vector<Node*> >& gridGraph) {
+		this->gridGraph = gridGraph;
+	}
 };
 
 #endif /* MAP_H_ */

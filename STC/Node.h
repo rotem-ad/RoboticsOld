@@ -16,6 +16,7 @@ typedef pair<int, int> Position;
 class Node {
 private:
 	int row, col;
+	bool ifExistWall;
 
 
 public:
@@ -26,6 +27,11 @@ public:
 	virtual ~Node();
 	Position getPosition();
 	bool isVisited();
+	/**
+	 * check if we have a wall
+	 */
+	bool isIfExistWall() const ;
+	void setIfExistWall(bool ifExistWall);
 };
 
 #endif /* NODE_H_ */

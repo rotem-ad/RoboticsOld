@@ -12,14 +12,14 @@ Map::Map(float mapResolution, float robotSize) :
 	mapResolution(mapResolution), robotSize(robotSize) {
 	robotSizeInCells = robotSize / mapResolution;
 	inflationRadius = 0.3 * robotSizeInCells;
+	fineMapWidth = mapWidth/robotSizeInCells;
+	fineMapHeight = mapHeight/robotSizeInCells;
 	cout<<"inflation radius "<< inflationRadius<<endl;
 
 }
 
 void Map::loadMapFromFile(const char* filePath) {
-
 	lodepng::decode(image, mapWidth, mapHeight, filePath);
-
 	cout << "map size: " << mapWidth << "," << mapHeight << endl;
 
 	map.resize(mapHeight);
@@ -107,7 +107,6 @@ void Map::inflate(int i , int j){
 				// Mark this cell as occupied in inflateMap
 				inflateMap[k][m]= true;
 				// Draw black color in corresponding image
-
 				int c = (k * mapWidth + m) * 4;
 				image[c] = 0;
 				image[c + 1] = 0;
@@ -188,6 +187,12 @@ void Map::buildCoarseGrid(){
 }
 
 void Map::addPathToFile(char* filePath , vector<vector<Node *> > graph,int Width,int Hight) {
+	gridGraph.resize(fineMapHeight);
+		for(int k=0;k<fineMapHeight;k++){
+			gridGraph[k].resize(fineMapWidth);
+		}
+		this->originalGraph = graph;
+
 		for(int z = 0;z<Hight;z++){
 			for(int l= 0;l<Width;l++){
 				if (graph[z][l] != NULL) {
@@ -207,33 +212,60 @@ void Map::addPathToFile(char* filePath , vector<vector<Node *> > graph,int Width
 							////convert the row to the original map column that was read from the image
 							j1 = ((j1+0.5) * robotSizeInCells * 2);
 							//check how we need to move on row or column
+							//UP
 							if(j<j1 && i == i1){
 								for (int m = j; m < j1; m++) {
+									calcGridGraphindex(i,m);
+									gridGraph[a][b] = new Node(a,b);
+									gridGraph[a][b]->setIfExistWall(true);
+									gridGraph[a+1][b] = new Node(a+1,b);
+									gridGraph[a+1][b]->setIfExistWall(true);
+									cout<<endl;
 									int c = (i * mapWidth + m) * 4;
 								    image[c] = 255;
 									image[c + 1] = 0;
 									image[c + 2] = 0;
+									cout<<a<<","<<b<<endl;
 
 								}
+
 							//check how we need to move on row or column
+							//DOWN
 							}else if(j>j1 && i == i1){
 								for (int m =j1 ; m < j; m++) {
+									calcGridGraphindex(i,m);
+									gridGraph[a][b+1] = new Node(a,b+1);
+									gridGraph[a][b+1]->setIfExistWall(true);
+									gridGraph[a+1][b+1] = new Node(a+1,b+1);
+									gridGraph[a+1][b+1]->setIfExistWall(true);
 									int c = (i * mapWidth + m) * 4;
 									image[c] = 255;
 									image[c + 1] = 0;
 									image[c + 2] = 0;
 									}
 							//check how we need to move on row or column
+							//LEFT
 							}else if(j == j1 && i > i1){
 								for (int m =i1 ; m < i; m++) {
+									calcGridGraphindex(m,j);
+									gridGraph[a+1][b] = new Node(a+1,b);
+									gridGraph[a+1][b]->setIfExistWall(true);
+									gridGraph[a+1][b+1] = new Node(a+1,b+1);
+									gridGraph[a+1][b+1]->setIfExistWall(true);
 									int c = (m * mapWidth + j) * 4;
 									image[c] = 255;
 									image[c + 1] = 0;
 									image[c + 2] = 0;
 									}
 							//check how we need to move on row or column
+							//RIGHT
 							}else if(j == j1 && i < i1){
 								for (int m =i ; m < i1; m++) {
+									calcGridGraphindex(m,j);
+									gridGraph[a][b] = new Node(a,b);
+									gridGraph[a][b]->setIfExistWall(true);
+									gridGraph[a][b+1] = new Node(a,b+1);
+									gridGraph[a][b+1]->setIfExistWall(true);
 									int c = (m * mapWidth + j) * 4;
 									image[c] = 255;
 									image[c + 1] = 0;
@@ -245,6 +277,41 @@ void Map::addPathToFile(char* filePath , vector<vector<Node *> > graph,int Width
 							cout << "(" << graph[z][l]->neighborsInSpanningTree[k]->getPosition().first << "," << graph[z][l]->neighborsInSpanningTree[k]->getPosition().second << ")" << endl;
 						}
 					}
+
+				}
+
+			}
+		}
+		cout<<"save to image done"<<endl;
+		lodepng::encode(filePath, image, mapWidth, mapHeight);
+}
+
+void Map::calcGridGraphindex(int i,int j){
+
+	this->a = (((i-robotSizeInCells)/robotSizeInCells));
+	this->b=(((j-robotSizeInCells)/robotSizeInCells));
+
+}
+
+void Map::addPathToFile1(char* filePath , vector<vector<Node *> > graph,int Width,int Hight) {
+		for(int z = 0;z<fineMapHeight;z++){
+			for(int l= 0;l<fineMapWidth;l++){
+				if (graph[z][l] != NULL) {
+					int i = graph[z][l]->getPosition().first;
+					int j = graph[z][l]->getPosition().second;
+					i  = ((i + 0.5) * robotSizeInCells);
+					//convert the row to the original map column that was read from the image
+					j = ((j+ 0.5) * robotSizeInCells);
+
+
+					int c = (i * (mapWidth) + j) * 4;
+					image[c] = 255;
+					image[c + 1] = 0;
+					image[c + 2] = 0;
+
+					cout<<i<<","<<j<<endl;
+
+
 
 				}
 
