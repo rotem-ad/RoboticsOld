@@ -293,7 +293,8 @@ void Map::buildPath(vector<vector<Node *> > graph,int Width,int Hight){
 								//check how we need to move on row or column
 								//UP
 								if(j<j1 && i == i1){
-									for (int m = j; m < j1; m++) {
+									int m = j;
+									for (m = j; m < j1; m++) {
 										gridGraph[i][m] = new Node(i,m);
 										gridGraph[i][m]->setIfExistWall(true);
 										gridGraph[i+1][m] = new Node(i+1,m);
@@ -302,13 +303,22 @@ void Map::buildPath(vector<vector<Node *> > graph,int Width,int Hight){
 										gridGraph[i][m+1]->setIfExistWall(true);
 										gridGraph[i+1][m+1] = new Node(i+1,m+1);
 										gridGraph[i+1][m+1]->setIfExistWall(true);
-
 									}
+									gridGraph[i][m] = new Node(i,m);
+									gridGraph[i][m]->setIfExistWall(true);
+									gridGraph[i+1][m] = new Node(i+1,m);
+									gridGraph[i+1][m]->setIfExistWall(true);
+									gridGraph[i][m+1] = new Node(i,m+1);
+									gridGraph[i][m+1]->setIfExistWall(true);
+									gridGraph[i+1][m+1] = new Node(i+1,m+1);
+									gridGraph[i+1][m+1]->setIfExistWall(true);
+
 
 								//check how we need to move on row or column
 								//DOWN
 								}else if(j>j1 && i == i1){
-									for (int m =j1 ; m < j; m++) {
+									int m =j1;
+									for (m =j1 ; m < j; m++) {
 										gridGraph[i][m+1] = new Node(i,m+1);
 										gridGraph[i][m+1]->setIfExistWall(true);
 										gridGraph[i+1][m+1] = new Node(i+1,m+1);
@@ -317,13 +327,22 @@ void Map::buildPath(vector<vector<Node *> > graph,int Width,int Hight){
 										gridGraph[i+1][m]->setIfExistWall(true);
 										gridGraph[i][m] = new Node(i,m);
 										gridGraph[i][m]->setIfExistWall(true);
-
 										}
+									gridGraph[i][m+1] = new Node(i,m+1);
+									gridGraph[i][m+1]->setIfExistWall(true);
+									gridGraph[i+1][m+1] = new Node(i+1,m+1);
+									gridGraph[i+1][m+1]->setIfExistWall(true);
+									gridGraph[i+1][m] = new Node(i+1,m);
+									gridGraph[i+1][m]->setIfExistWall(true);
+									gridGraph[i][m] = new Node(i,m);
+									gridGraph[i][m]->setIfExistWall(true);
+
 
 								//check how we need to move on row or column
 								//LEFT
 								}else if(j == j1 && i > i1){
-									for (int m =i1 ; m < i; m++) {
+									int m =i1;
+									for (m =i1 ; m < i; m++) {
 										gridGraph[m+1][j] = new Node(m+1,j);
 										gridGraph[m+1][j]->setIfExistWall(true);
 										gridGraph[m+1][j+1] = new Node(m+1,j+1);
@@ -333,11 +352,20 @@ void Map::buildPath(vector<vector<Node *> > graph,int Width,int Hight){
 										gridGraph[m][j+1] = new Node(m,j+1);
 										gridGraph[m][j+1]->setIfExistWall(true);
 										}
+									gridGraph[m+1][j] = new Node(m+1,j);
+									gridGraph[m+1][j]->setIfExistWall(true);
+									gridGraph[m+1][j+1] = new Node(m+1,j+1);
+									gridGraph[m+1][j+1]->setIfExistWall(true);
+									gridGraph[m][j] = new Node(m,j);
+									gridGraph[m][j]->setIfExistWall(true);
+									gridGraph[m][j+1] = new Node(m,j+1);
+									gridGraph[m][j+1]->setIfExistWall(true);
 
 								//check how we need to move on row or column
 								//RIGHT
 								}else if(j == j1 && i < i1){
-									for (int m =i ; m < i1; m++) {
+									int m =i;
+									for (m =i ; m < i1; m++) {
 										gridGraph[m][j] = new Node(m,j);
 										gridGraph[m][j]->setIfExistWall(true);
 										gridGraph[m][j+1] = new Node(m,j+1);
@@ -347,6 +375,14 @@ void Map::buildPath(vector<vector<Node *> > graph,int Width,int Hight){
 										gridGraph[m+1][j+1] = new Node(m+1,j+1);
 										gridGraph[m+1][j+1]->setIfExistWall(true);
 										}
+									gridGraph[m][j] = new Node(m,j);
+									gridGraph[m][j]->setIfExistWall(true);
+									gridGraph[m][j+1] = new Node(m,j+1);
+									gridGraph[m][j+1]->setIfExistWall(true);
+									gridGraph[m+1][j] = new Node(m+1,j);
+									gridGraph[m+1][j]->setIfExistWall(true);
+									gridGraph[m+1][j+1] = new Node(m+1,j+1);
+									gridGraph[m+1][j+1]->setIfExistWall(true);
 								}
 								cout << "(" << graph[z][l]->getPosition().first << "," << graph[z][l]->getPosition().second << ")";
 								cout << " -> ";
