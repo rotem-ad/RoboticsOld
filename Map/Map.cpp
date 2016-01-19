@@ -12,14 +12,14 @@ Map::Map(float mapResolution, float robotSize) :
 	mapResolution(mapResolution), robotSize(robotSize) {
 	robotSizeInCells = robotSize / mapResolution;
 	inflationRadius = 0.3 * robotSizeInCells;
-	fineMapWidth = mapWidth/robotSizeInCells;
-	fineMapHeight = mapHeight/robotSizeInCells;
 	cout<<"inflation radius "<< inflationRadius<<endl;
 
 }
 
 void Map::loadMapFromFile(const char* filePath) {
 	lodepng::decode(image, mapWidth, mapHeight, filePath);
+	fineMapWidth = mapWidth/robotSizeInCells;
+	fineMapHeight = mapHeight/robotSizeInCells;
 	cout << "map size: " << mapWidth << "," << mapHeight << endl;
 
 	map.resize(mapHeight);
@@ -228,6 +228,12 @@ void Map::addPathToFile(char* filePath , vector<vector<Node *> > graph,int Width
 									cout<<a<<","<<b<<endl;
 
 								}
+//								gridGraph[a+1][b+1] = new Node(a+1,b+1);
+//								gridGraph[a+1][b+1]->setIfExistWall(true);
+//								gridGraph[a+2][b+1] = new Node(a+2,b+1);
+//								gridGraph[a+2][b+1]->setIfExistWall(true);
+
+
 
 							//check how we need to move on row or column
 							//DOWN
@@ -243,6 +249,11 @@ void Map::addPathToFile(char* filePath , vector<vector<Node *> > graph,int Width
 									image[c + 1] = 0;
 									image[c + 2] = 0;
 									}
+
+//								gridGraph[a+1][b+2] = new Node(a+1,b+2);
+//								gridGraph[a+1][b+2]->setIfExistWall(true);
+//								gridGraph[a+2][b+2] = new Node(a+2,b+2);
+//								gridGraph[a+2][b+2]->setIfExistWall(true);
 							//check how we need to move on row or column
 							//LEFT
 							}else if(j == j1 && i > i1){
@@ -257,6 +268,11 @@ void Map::addPathToFile(char* filePath , vector<vector<Node *> > graph,int Width
 									image[c + 1] = 0;
 									image[c + 2] = 0;
 									}
+//								gridGraph[a+2][b+1] = new Node(a+2,b+1);
+//								gridGraph[a+2][b+1]->setIfExistWall(true);
+//								gridGraph[a+2][b+2] = new Node(a+2,b+2);
+//								gridGraph[a+2][b+2]->setIfExistWall(true);
+
 							//check how we need to move on row or column
 							//RIGHT
 							}else if(j == j1 && i < i1){
@@ -271,6 +287,10 @@ void Map::addPathToFile(char* filePath , vector<vector<Node *> > graph,int Width
 									image[c + 1] = 0;
 									image[c + 2] = 0;
 									}
+//								gridGraph[a+1][b+1] = new Node(a+1,b+1);
+//								gridGraph[a+1][b+1]->setIfExistWall(true);
+//								gridGraph[a+1][b+2] = new Node(a+1,b+2);
+//								gridGraph[a+1][b+2]->setIfExistWall(true);
 							}
 							cout << "(" << graph[z][l]->getPosition().first << "," << graph[z][l]->getPosition().second << ")";
 							cout << " -> ";
@@ -305,9 +325,9 @@ void Map::addPathToFile1(char* filePath , vector<vector<Node *> > graph,int Widt
 
 
 					int c = (i * (mapWidth) + j) * 4;
-					image[c] = 255;
+					image[c] = 0;
 					image[c + 1] = 0;
-					image[c + 2] = 0;
+					image[c + 2] = 255;
 
 					cout<<i<<","<<j<<endl;
 
