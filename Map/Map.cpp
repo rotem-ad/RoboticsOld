@@ -20,6 +20,11 @@ void Map::loadMapFromFile(const char* filePath) {
 	lodepng::decode(image, mapWidth, mapHeight, filePath);
 	fineMapWidth = mapWidth/robotSizeInCells;
 	fineMapHeight = mapHeight/robotSizeInCells;
+	//create grid graph for to storage the path
+	gridGraph.resize(fineMapHeight);
+			for(int k=0;k<fineMapHeight;k++){
+				gridGraph[k].resize(fineMapWidth);
+			}
 	cout << "map size: " << mapWidth << "," << mapHeight << endl;
 
 	map.resize(mapHeight);
@@ -187,10 +192,6 @@ void Map::buildCoarseGrid(){
 }
 
 void Map::addPathToFile(char* filePath , vector<vector<Node *> > graph,int Width,int Hight) {
-	gridGraph.resize(fineMapHeight);
-		for(int k=0;k<fineMapHeight;k++){
-			gridGraph[k].resize(fineMapWidth);
-		}
 		this->originalGraph = graph;
 
 		for(int z = 0;z<Hight;z++){
@@ -215,82 +216,39 @@ void Map::addPathToFile(char* filePath , vector<vector<Node *> > graph,int Width
 							//UP
 							if(j<j1 && i == i1){
 								for (int m = j; m < j1; m++) {
-									calcGridGraphindex(i,m);
-									gridGraph[a][b] = new Node(a,b);
-									gridGraph[a][b]->setIfExistWall(true);
-									gridGraph[a+1][b] = new Node(a+1,b);
-									gridGraph[a+1][b]->setIfExistWall(true);
-									cout<<endl;
 									int c = (i * mapWidth + m) * 4;
 								    image[c] = 255;
 									image[c + 1] = 0;
 									image[c + 2] = 0;
-									cout<<a<<","<<b<<endl;
-
 								}
-//								gridGraph[a+1][b+1] = new Node(a+1,b+1);
-//								gridGraph[a+1][b+1]->setIfExistWall(true);
-//								gridGraph[a+2][b+1] = new Node(a+2,b+1);
-//								gridGraph[a+2][b+1]->setIfExistWall(true);
-
-
-
 							//check how we need to move on row or column
 							//DOWN
 							}else if(j>j1 && i == i1){
 								for (int m =j1 ; m < j; m++) {
-									calcGridGraphindex(i,m);
-									gridGraph[a][b+1] = new Node(a,b+1);
-									gridGraph[a][b+1]->setIfExistWall(true);
-									gridGraph[a+1][b+1] = new Node(a+1,b+1);
-									gridGraph[a+1][b+1]->setIfExistWall(true);
 									int c = (i * mapWidth + m) * 4;
 									image[c] = 255;
 									image[c + 1] = 0;
 									image[c + 2] = 0;
 									}
-
-//								gridGraph[a+1][b+2] = new Node(a+1,b+2);
-//								gridGraph[a+1][b+2]->setIfExistWall(true);
-//								gridGraph[a+2][b+2] = new Node(a+2,b+2);
-//								gridGraph[a+2][b+2]->setIfExistWall(true);
 							//check how we need to move on row or column
 							//LEFT
 							}else if(j == j1 && i > i1){
 								for (int m =i1 ; m < i; m++) {
-									calcGridGraphindex(m,j);
-									gridGraph[a+1][b] = new Node(a+1,b);
-									gridGraph[a+1][b]->setIfExistWall(true);
-									gridGraph[a+1][b+1] = new Node(a+1,b+1);
-									gridGraph[a+1][b+1]->setIfExistWall(true);
 									int c = (m * mapWidth + j) * 4;
 									image[c] = 255;
 									image[c + 1] = 0;
 									image[c + 2] = 0;
 									}
-//								gridGraph[a+2][b+1] = new Node(a+2,b+1);
-//								gridGraph[a+2][b+1]->setIfExistWall(true);
-//								gridGraph[a+2][b+2] = new Node(a+2,b+2);
-//								gridGraph[a+2][b+2]->setIfExistWall(true);
 
 							//check how we need to move on row or column
 							//RIGHT
 							}else if(j == j1 && i < i1){
 								for (int m =i ; m < i1; m++) {
-									calcGridGraphindex(m,j);
-									gridGraph[a][b] = new Node(a,b);
-									gridGraph[a][b]->setIfExistWall(true);
-									gridGraph[a][b+1] = new Node(a,b+1);
-									gridGraph[a][b+1]->setIfExistWall(true);
 									int c = (m * mapWidth + j) * 4;
 									image[c] = 255;
 									image[c + 1] = 0;
 									image[c + 2] = 0;
 									}
-//								gridGraph[a+1][b+1] = new Node(a+1,b+1);
-//								gridGraph[a+1][b+1]->setIfExistWall(true);
-//								gridGraph[a+1][b+2] = new Node(a+1,b+2);
-//								gridGraph[a+1][b+2]->setIfExistWall(true);
 							}
 							cout << "(" << graph[z][l]->getPosition().first << "," << graph[z][l]->getPosition().second << ")";
 							cout << " -> ";
@@ -311,6 +269,96 @@ void Map::calcGridGraphindex(int i,int j){
 	this->a = (((i-robotSizeInCells)/robotSizeInCells));
 	this->b=(((j-robotSizeInCells)/robotSizeInCells));
 
+}
+
+void Map::buildPath(vector<vector<Node *> > graph,int Width,int Hight){
+	for(int z = 0;z<Hight;z++){
+				for(int l= 0;l<Width;l++){
+					if (graph[z][l] != NULL) {
+						for (int k=0;k<4;k++) {
+							if (graph[z][l]->neighborsInSpanningTree[k] != NULL) {
+							   	int i = graph[z][l]->getPosition().first;
+								int j = graph[z][l]->getPosition().second;
+								//convert the row to the original map row that was read from the image
+								i  = (i*2)+0.5;
+								//convert the row to the original map column that was read from the image
+								j = (j*2)+0.5;
+
+								int i1 = graph[z][l]->neighborsInSpanningTree[k]->getPosition().first ;
+								int j1 = graph[z][l]->neighborsInSpanningTree[k]->getPosition().second;
+								////convert the row to the original map row that was read from the image
+								i1 = (i1*2)+0.5;
+								////convert the row to the original map column that was read from the image
+								j1 = (j1*2)+0.5;
+								//check how we need to move on row or column
+								//UP
+								if(j<j1 && i == i1){
+									for (int m = j; m < j1; m++) {
+										gridGraph[i][m] = new Node(i,m);
+										gridGraph[i][m]->setIfExistWall(true);
+										gridGraph[i+1][m] = new Node(i+1,m);
+										gridGraph[i+1][m]->setIfExistWall(true);
+									}
+	//								gridGraph[a+1][b+1] = new Node(a+1,b+1);
+	//								gridGraph[a+1][b+1]->setIfExistWall(true);
+	//								gridGraph[a+2][b+1] = new Node(a+2,b+1);
+	//								gridGraph[a+2][b+1]->setIfExistWall(true);
+
+
+
+								//check how we need to move on row or column
+								//DOWN
+								}else if(j>j1 && i == i1){
+									for (int m =j1 ; m < j; m++) {
+										gridGraph[i][m+1] = new Node(i,m+1);
+										gridGraph[i][m+1]->setIfExistWall(true);
+										gridGraph[i+1][m+1] = new Node(i+1,m+1);
+										gridGraph[i+1][m+1]->setIfExistWall(true);
+
+										}
+
+	//								gridGraph[a+1][b+2] = new Node(a+1,b+2);
+	//								gridGraph[a+1][b+2]->setIfExistWall(true);
+	//								gridGraph[a+2][b+2] = new Node(a+2,b+2);
+	//								gridGraph[a+2][b+2]->setIfExistWall(true);
+								//check how we need to move on row or column
+								//LEFT
+								}else if(j == j1 && i > i1){
+									for (int m =i1 ; m < i; m++) {
+										gridGraph[m+1][j] = new Node(m+1,j);
+										gridGraph[m+1][j]->setIfExistWall(true);
+										gridGraph[m+1][j+1] = new Node(m+1,j+1);
+										gridGraph[m+1][j+1]->setIfExistWall(true);
+										}
+	//								gridGraph[a+2][b+1] = new Node(a+2,b+1);
+	//								gridGraph[a+2][b+1]->setIfExistWall(true);
+	//								gridGraph[a+2][b+2] = new Node(a+2,b+2);
+	//								gridGraph[a+2][b+2]->setIfExistWall(true);
+
+								//check how we need to move on row or column
+								//RIGHT
+								}else if(j == j1 && i < i1){
+									for (int m =i ; m < i1; m++) {
+										gridGraph[m][j] = new Node(m,j);
+										gridGraph[m][j]->setIfExistWall(true);
+										gridGraph[m][j+1] = new Node(m,j+1);
+										gridGraph[m][j+1]->setIfExistWall(true);
+										}
+	//								gridGraph[a+1][b+1] = new Node(a+1,b+1);
+	//								gridGraph[a+1][b+1]->setIfExistWall(true);
+	//								gridGraph[a+1][b+2] = new Node(a+1,b+2);
+	//								gridGraph[a+1][b+2]->setIfExistWall(true);
+								}
+								cout << "(" << graph[z][l]->getPosition().first << "," << graph[z][l]->getPosition().second << ")";
+								cout << " -> ";
+								cout << "(" << graph[z][l]->neighborsInSpanningTree[k]->getPosition().first << "," << graph[z][l]->neighborsInSpanningTree[k]->getPosition().second << ")" << endl;
+							}
+						}
+
+					}
+
+				}
+			}
 }
 
 void Map::addPathToFile1(char* filePath , vector<vector<Node *> > graph,int Width,int Hight) {
