@@ -298,13 +298,12 @@ void Map::buildPath(vector<vector<Node *> > graph,int Width,int Hight){
 										gridGraph[i][m]->setIfExistWall(true);
 										gridGraph[i+1][m] = new Node(i+1,m);
 										gridGraph[i+1][m]->setIfExistWall(true);
+										gridGraph[i][m+1] = new Node(i,m+1);
+										gridGraph[i][m+1]->setIfExistWall(true);
+										gridGraph[i+1][m+1] = new Node(i+1,m+1);
+										gridGraph[i+1][m+1]->setIfExistWall(true);
+
 									}
-	//								gridGraph[a+1][b+1] = new Node(a+1,b+1);
-	//								gridGraph[a+1][b+1]->setIfExistWall(true);
-	//								gridGraph[a+2][b+1] = new Node(a+2,b+1);
-	//								gridGraph[a+2][b+1]->setIfExistWall(true);
-
-
 
 								//check how we need to move on row or column
 								//DOWN
@@ -314,13 +313,13 @@ void Map::buildPath(vector<vector<Node *> > graph,int Width,int Hight){
 										gridGraph[i][m+1]->setIfExistWall(true);
 										gridGraph[i+1][m+1] = new Node(i+1,m+1);
 										gridGraph[i+1][m+1]->setIfExistWall(true);
+										gridGraph[i+1][m] = new Node(i+1,m);
+										gridGraph[i+1][m]->setIfExistWall(true);
+										gridGraph[i][m] = new Node(i,m);
+										gridGraph[i][m]->setIfExistWall(true);
 
 										}
 
-	//								gridGraph[a+1][b+2] = new Node(a+1,b+2);
-	//								gridGraph[a+1][b+2]->setIfExistWall(true);
-	//								gridGraph[a+2][b+2] = new Node(a+2,b+2);
-	//								gridGraph[a+2][b+2]->setIfExistWall(true);
 								//check how we need to move on row or column
 								//LEFT
 								}else if(j == j1 && i > i1){
@@ -329,11 +328,11 @@ void Map::buildPath(vector<vector<Node *> > graph,int Width,int Hight){
 										gridGraph[m+1][j]->setIfExistWall(true);
 										gridGraph[m+1][j+1] = new Node(m+1,j+1);
 										gridGraph[m+1][j+1]->setIfExistWall(true);
+										gridGraph[m][j] = new Node(m,j);
+										gridGraph[m][j]->setIfExistWall(true);
+										gridGraph[m][j+1] = new Node(m,j+1);
+										gridGraph[m][j+1]->setIfExistWall(true);
 										}
-	//								gridGraph[a+2][b+1] = new Node(a+2,b+1);
-	//								gridGraph[a+2][b+1]->setIfExistWall(true);
-	//								gridGraph[a+2][b+2] = new Node(a+2,b+2);
-	//								gridGraph[a+2][b+2]->setIfExistWall(true);
 
 								//check how we need to move on row or column
 								//RIGHT
@@ -343,11 +342,11 @@ void Map::buildPath(vector<vector<Node *> > graph,int Width,int Hight){
 										gridGraph[m][j]->setIfExistWall(true);
 										gridGraph[m][j+1] = new Node(m,j+1);
 										gridGraph[m][j+1]->setIfExistWall(true);
+										gridGraph[m+1][j] = new Node(m+1,j);
+										gridGraph[m+1][j]->setIfExistWall(true);
+										gridGraph[m+1][j+1] = new Node(m+1,j+1);
+										gridGraph[m+1][j+1]->setIfExistWall(true);
 										}
-	//								gridGraph[a+1][b+1] = new Node(a+1,b+1);
-	//								gridGraph[a+1][b+1]->setIfExistWall(true);
-	//								gridGraph[a+1][b+2] = new Node(a+1,b+2);
-	//								gridGraph[a+1][b+2]->setIfExistWall(true);
 								}
 								cout << "(" << graph[z][l]->getPosition().first << "," << graph[z][l]->getPosition().second << ")";
 								cout << " -> ";
