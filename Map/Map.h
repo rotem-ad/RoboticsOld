@@ -64,6 +64,7 @@ public:
 	void writeinflateObstacles(vector<vector<bool> > map);
 	void buildFineGrid();
 	void buildCoarseGrid();
+	void buildPath(vector<vector<Node *> > graph,int Width,int Hight);
 	void calcGridGraphindex(int i,int j);
 	virtual ~Map();
 
