@@ -9,6 +9,7 @@ class STC {
 private:
 	Map &map;
 	vector<vector<Node *> > graph;
+	vector<Node *>Path;
 	int graphWidth;
     int graphHeight;
 	void buildGraph();
@@ -20,9 +21,12 @@ public:
 	vector<vector<Node *> > getGraph();
 	void buildSpanningTree();
 	void drawSpanningTree();
+	void printPath();
 	unsigned int getGraphWidth();
 	unsigned int getGraphHeight();
 	virtual ~STC();
+	const vector<Node*>& getPath() const ;
+
 };
 
 

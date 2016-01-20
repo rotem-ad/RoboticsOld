@@ -12,24 +12,25 @@
 
 using namespace std;
 
-STC::STC(Map &map, Position startPos):map(map) {
+STC::STC(Map &map, Position startPos) :
+		map(map) {
 	buildGraph();
 	//printGraph();
 	DFS(graph[startPos.first][startPos.second]);
-	printDFS();
+	//printDFS();
 }
 
 void STC::buildGraph() {
 	Grid coarseGrid = map.getCoarseGrid();
-	this->graphHeight  = coarseGrid.size();
-	this->graphWidth= coarseGrid[0].size();
+	this->graphHeight = coarseGrid.size();
+	this->graphWidth = coarseGrid[0].size();
 
 	graph.resize(graphHeight);
 	for (int i = 0; i < graphHeight; i++)
 		graph[i].resize(graphWidth);
 
-	for (int i=0;i<graphHeight;i++) {
-		for (int j=0;j<graphWidth;j++) {
+	for (int i = 0; i < graphHeight; i++) {
+		for (int j = 0; j < graphWidth; j++) {
 			// cell is not occupied in coarseGrid
 			if (!coarseGrid[i][j]) {
 				Node* node = new Node(i, j);
@@ -41,34 +42,38 @@ void STC::buildGraph() {
 
 void STC::printGraph() {
 	int gridRows = graph.size();
-		int gridCols = graph[0].size();
+	int gridCols = graph[0].size();
 
-
-		for (int i=0;i<gridRows;i++) {
-			for (int j=0;j<gridCols;j++) {
-				if (graph[i][j]) {
-					cout << setw(2) << i << ":" << setw(2) <<  j << " ";
-				} else {
-					cout << "  :   ";
-				}
+	for (int i = 0; i < gridRows; i++) {
+		for (int j = 0; j < gridCols; j++) {
+			if (graph[i][j]) {
+				cout << setw(2) << i << ":" << setw(2) << j << " ";
+			} else {
+				cout << "  :   ";
 			}
-			cout << endl;
 		}
+		cout << endl;
+	}
 }
 
 void STC::printDFS() {
 	int gridRows = graph.size();
 	int gridCols = graph[0].size();
 
-	for (int i=0;i<gridRows;i++) {
-		for (int j=0;j<gridCols;j++) {
+	for (int i = 0; i < gridRows; i++) {
+		for (int j = 0; j < gridCols; j++) {
 			if (graph[i][j] != NULL) {
-				for (int k=0;k<4;k++) {
+				for (int k = 0; k < 4; k++) {
 					if (graph[i][j]->neighborsInSpanningTree[k] != NULL) {
 
-						cout << "(" << graph[i][j]->getPosition().first << "," << graph[i][j]->getPosition().second << ")";
+						cout << "(" << graph[i][j]->getPosition().first << ","
+								<< graph[i][j]->getPosition().second << ")";
 						cout << " -> ";
-						cout << "(" << graph[i][j]->neighborsInSpanningTree[k]->getPosition().first << "," << graph[i][j]->neighborsInSpanningTree[k]->getPosition().second << ")" << endl;
+						cout << "("
+								<< graph[i][j]->neighborsInSpanningTree[k]->getPosition().first
+								<< ","
+								<< graph[i][j]->neighborsInSpanningTree[k]->getPosition().second
+								<< ")" << endl;
 					}
 				}
 
@@ -81,11 +86,13 @@ void STC::DFS(Node* n) {
 	n->visited = true;
 	int x = n->getPosition().first;
 	int y = n->getPosition().second;
+	//add the point of path
+	Path.push_back(n);
 
 	// right
-	int row = x+1;
+	int row = x + 1;
 	int col = y;
-	if (row >= 0 && row < graph.size() && col >=0 && col < graph[0].size()) {
+	if (row >= 0 && row < graph.size() && col >= 0 && col < graph[0].size()) {
 		//check if exist node in this  field
 		if (graph[row][col] != NULL && !graph[row][col]->visited) {
 			n->neighborsInSpanningTree[0] = graph[row][col];
@@ -95,8 +102,8 @@ void STC::DFS(Node* n) {
 
 	// up
 	row = x;
-	col = y-1;
-	if (row >= 0 && row < graph.size() && col >=0 && col < graph[0].size()) {
+	col = y - 1;
+	if (row >= 0 && row < graph.size() && col >= 0 && col < graph[0].size()) {
 		if (graph[row][col] != NULL && !graph[row][col]->visited) {
 			n->neighborsInSpanningTree[1] = graph[row][col];
 			DFS(graph[row][col]);
@@ -104,9 +111,9 @@ void STC::DFS(Node* n) {
 	}
 
 	// left
-	row = x-1;
+	row = x - 1;
 	col = y;
-	if (row >= 0 && row < graph.size() && col >=0 && col < graph[0].size()) {
+	if (row >= 0 && row < graph.size() && col >= 0 && col < graph[0].size()) {
 		if (graph[row][col] != NULL && !graph[row][col]->visited) {
 			n->neighborsInSpanningTree[2] = graph[row][col];
 			DFS(graph[row][col]);
@@ -115,23 +122,56 @@ void STC::DFS(Node* n) {
 
 	// down
 	row = x;
-	col = y+1;
-	if (row >= 0 && row < graph.size() && col >=0 && col < graph[0].size()) {
+	col = y + 1;
+	if (row >= 0 && row < graph.size() && col >= 0 && col < graph[0].size()) {
 		if (graph[row][col] != NULL && !graph[row][col]->visited) {
 			n->neighborsInSpanningTree[3] = graph[row][col];
 			DFS(graph[row][col]);
 		}
 	}
+	//Path.push_back(n);
 }
 
-vector<vector<Node *> > STC::getGraph(){
+void STC::printPath() {
+	bool flag = false;
+	cout << "print path function " << endl;
+
+	for (int i = 0; i < Path.size(); i++) {
+		Node* n = Path[i];
+		cout << "(" << n->getPosition().first << "," << n->getPosition().second<< ")";
+
+		for (int k = 0; k < n->neighborsInSpanningTree.size(); k++) {
+			if (n->neighborsInSpanningTree[k] != NULL) {
+				flag = true;
+				cout << " -> ";
+				cout << "(" << n->neighborsInSpanningTree[k]->getPosition().first
+						<< ","
+						<< n->neighborsInSpanningTree[k]->getPosition().second
+						<< "), ";
+			}
+		}
+		//if(!flag){
+			cout<<endl;
+			//flag = false;
+		//}
+	}
+}
+
+/**
+ * get the path of the robot
+ */
+const vector<Node*>& STC::getPath() const {
+		return Path;
+	}
+
+vector<vector<Node *> > STC::getGraph() {
 	return graph;
 }
 
-unsigned int STC::getGraphWidth(){
-return this->graphWidth;
+unsigned int STC::getGraphWidth() {
+	return this->graphWidth;
 }
-unsigned int STC::getGraphHeight(){
+unsigned int STC::getGraphHeight() {
 	return this->graphHeight;
 }
 

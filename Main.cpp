@@ -30,9 +30,10 @@ int main() {
 	startPos.first = 6;
 	startPos.second = 17;
 	STC stc(map, startPos);
-	map.addPathToFile("roboticLabMapnew.png",stc.getGraph(),stc.getGraphWidth(),stc.getGraphHeight());
-	map.buildPath(stc.getGraph(),stc.getGraphWidth(),stc.getGraphHeight());
-	map.addPathToFile1("roboticLabMapnew1.png",map.getGridGraph(),stc.getGraphWidth(),stc.getGraphHeight());
+	stc.printPath();
+	map.convertPathToGridGraph(stc.getPath());
+	map.addPathToFile("roboticLabMapnew1.png",stc.getPath());
+	map.drawPointsInfile("roboticLabMapnew2.png",map.getGridGraph());
 	return 0;
 }
 

@@ -52,11 +52,9 @@ public:
 	 * load map from file
 	 */
 	void loadMapFromFile(const char* filePath);
-	/**
-	 * save map to image file
-	 */
-	void addPathToFile(char* filePath , vector<vector<Node *> > graph,int Width,int Hight);
-	void addPathToFile1(char* filePath , vector<vector<Node *> > graph,int Width,int Hight);
+	void drawPointsInfile(char* filePath , vector<vector<Node *> > graph);
+	void addPathToFile(char* filePath ,vector<Node *> path);
+	void convertPathToGridGraph(vector<Node *> path);
 	void inflateObstacles();
 	void printMap() const;
 	void printGrid(const Grid &grid) const;
