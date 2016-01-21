@@ -17,7 +17,7 @@ private:
 	vector<unsigned char> image;
 	vector<unsigned char> Gridimage;
 	vector<vector<Node *> > gridGraph;
-	vector<vector<Node *> > originalGraph;
+	vector<vector<Node *> > Path;
 	Grid map;
 	Grid inflateMap;
 	//original Map size
@@ -64,6 +64,7 @@ public:
 	void buildCoarseGrid();
 	void buildPath(vector<vector<Node *> > graph,int Width,int Hight);
 	void calcGridGraphindex(int i,int j);
+	void createEdgeBetweenPoints(Node* point1,Node* point2);
 	virtual ~Map();
 
 	const Grid& getFineGrid() const;

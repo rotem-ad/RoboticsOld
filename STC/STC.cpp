@@ -155,6 +155,8 @@ void STC::printPath() {
 			//flag = false;
 		//}
 	}
+
+	cout<<"end of print path function "<<endl;
 }
 
 /**

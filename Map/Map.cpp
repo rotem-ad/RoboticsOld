@@ -262,16 +262,14 @@ void Map::addPathToFile(char* filePath ,vector<Node *> path) {
  * calculate grid index from coarse grid
  */
 void Map::calcGridGraphindex(int i,int j){
-
 	this->a = (((i-robotSizeInCells)/robotSizeInCells));
 	this->b=(((j-robotSizeInCells)/robotSizeInCells));
-
 }
+
 
 /**
  * build path
  */
-
 void Map::convertPathToGridGraph(vector<Node *> path){
 	for (int z = 0; z < path.size(); z++) {
 		if (path[z] != NULL) {
@@ -285,36 +283,50 @@ void Map::convertPathToGridGraph(vector<Node *> path){
 					j = (j * 2) + 0.5;
 					gridGraph[i][j] = new Node(i, j);
 					gridGraph[i][j]->setIfExistWall(true);
-					gridGraph[i + 1][j] = new Node(i + 1, j);
-					gridGraph[i + 1][j]->setIfExistWall(true);
 					gridGraph[i][j + 1] = new Node(i, j + 1);
 					gridGraph[i][j + 1]->setIfExistWall(true);
+					//createEdgeBetweenPoints(gridGraph[i][j],gridGraph[i][j + 1]);
+					gridGraph[i + 1][j] = new Node(i + 1, j);
+					gridGraph[i + 1][j]->setIfExistWall(true);
 					gridGraph[i + 1][j + 1] = new Node(i + 1, j + 1);
 					gridGraph[i + 1][j + 1]->setIfExistWall(true);
+					//createEdgeBetweenPoints(gridGraph[i + 1][j],gridGraph[i + 1][j + 1]);
+					int i1 =path[z]->neighborsInSpanningTree[k]->getPosition().first;
+					int j1 =path[z]->neighborsInSpanningTree[k]->getPosition().second;
+					////convert the coarse row to the grid map row
+					i1 = (i1 * 2) + 0.5;
+					////convert the coarse row to the grid map row
+					j1 = (j1 * 2) + 0.5;
+					gridGraph[i1][j1] = new Node(i1, j1);
+					gridGraph[i1][j1]->setIfExistWall(true);
+					gridGraph[i1][j1 + 1] = new Node(i1, j1 + 1);
+					gridGraph[i1][j1 + 1]->setIfExistWall(true);
+					//createEdgeBetweenPoints(gridGraph[i1][j1],gridGraph[i1][j1 + 1]);
+					gridGraph[i1 + 1][j1] = new Node(i1 + 1, j1);
+					gridGraph[i1 + 1][j1]->setIfExistWall(true);
+					gridGraph[i1 + 1][j1 + 1] = new Node(i1 + 1, j1 + 1);
+					gridGraph[i1 + 1][j1 + 1]->setIfExistWall(true);
+					//createEdgeBetweenPoints(gridGraph[i1 + 1][j1],gridGraph[i1 + 1][j1 + 1]);
 
-					 i =path[z]->neighborsInSpanningTree[k]->getPosition().first;
-					j =path[z]->neighborsInSpanningTree[k]->getPosition().second;
-					////convert the coarse row to the grid map row
-					i = (i * 2) + 0.5;
-					////convert the coarse row to the grid map row
-					j = (j * 2) + 0.5;
-					gridGraph[i][j] = new Node(i, j);
-					gridGraph[i][j]->setIfExistWall(true);
-					gridGraph[i + 1][j] = new Node(i + 1, j);
-					gridGraph[i + 1][j]->setIfExistWall(true);
-					gridGraph[i][j + 1] = new Node(i, j + 1);
-					gridGraph[i][j + 1]->setIfExistWall(true);
-					gridGraph[i + 1][j + 1] = new Node(i + 1, j + 1);
-					gridGraph[i + 1][j + 1]->setIfExistWall(true);
+//					//UP
+//					if (i == i1 && j < j1) {
+//						createEdgeBetweenPoints(gridGraph[i+1][j],gridGraph[i][j]);
+//						createEdgeBetweenPoints(gridGraph[i][j],gridGraph[i1+1][j1]);
+//						//DOWN
+//					} else if (i == i1 && j > j1) {
+//						createEdgeBetweenPoints(gridGraph[i1][j1+1],gridGraph[i1+1][j1+1]);
+//						createEdgeBetweenPoints(gridGraph[i+1][j+1],gridGraph[i1][j1]);
+//					//LEFT
+//					} else if (i > i1 && j == j1) {
+//						createEdgeBetweenPoints(gridGraph[i][j+1],gridGraph[i][j]);
+//						createEdgeBetweenPoints(gridGraph[i+1][j],gridGraph[i1+1][j1+1]);
+//					//RIGHT
+//					} else if (i < i1 && j == j1) {
+//						createEdgeBetweenPoints(gridGraph[i][j],gridGraph[i][j+1]);
+//						createEdgeBetweenPoints(gridGraph[i][j+1],gridGraph[i1][j1]);
+//					}
 //
-//					cout << "(" << path[z]->getPosition().first << ","
-//							<< path[z]->getPosition().second << ")";
-//					cout << " -> ";
-//					cout << "("
-//							<< path[z]->neighborsInSpanningTree[k]->getPosition().first
-//							<< ","
-//							<< path[z]->neighborsInSpanningTree[k]->getPosition().second
-//							<< ")" << endl;
+
 				}
 			}
 
@@ -322,6 +334,53 @@ void Map::convertPathToGridGraph(vector<Node *> path){
 
 	}
 
+}
+
+void Map::createEdgeBetweenPoints(Node* point1,Node* point2){
+	int i = point1->getPosition().first;
+	int j = point1->getPosition().second;
+	//neighbor
+	int i1 = point2->getPosition().first;
+	int j1 = point2->getPosition().second;
+	//convert the points to the real map
+	i = ((i+0.5)  * robotSizeInCells);
+	j = ((j+0.5) * robotSizeInCells);
+	i1 = ((i1+0.5) * robotSizeInCells);
+	j1 = ((j1+0.5) * robotSizeInCells);
+	if(i==i1 && j<j1){
+		for (int m = j; m < j1; m++) {
+			int c = (i * mapWidth + m) * 4;
+			image[c] = 255;
+			image[c + 1] = 255;
+			image[c + 2] = 0;
+		}
+	}else if(i==i1 && j>j1){
+		for (int m = j1; m < j; m++) {
+			int c = (i * mapWidth + m) * 4;
+			image[c] = 255;
+			image[c + 1] = 255;
+			image[c + 2] = 0;
+		}
+//LEFT
+	}else if(i>i1 && j==j1){
+		for (int m = i1; m < i; m++) {
+			int c = (m * mapWidth + j) * 4;
+			image[c] = 255;
+			image[c + 1] = 255;
+			image[c + 2] = 0;
+		}
+	}else if(i<i1 && j==j1){
+		for (int m = i; m < i1; m++) {
+			int c = (m * mapWidth + j) * 4;
+			image[c] = 255;
+			image[c + 1] = 255;
+			image[c + 2] = 0;
+		}
+	}
+
+
+
+	lodepng::encode("roboticLabMapnew2.png", image, mapWidth, mapHeight);
 }
 
 void Map::drawPointsInfile(char* filePath , vector<vector<Node *> > graph) {
